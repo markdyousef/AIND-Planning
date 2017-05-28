@@ -17,7 +17,11 @@ from functools import lru_cache
 class HaveCakeProblem(Problem):
     def __init__(self, initial: FluentState, goal: list):
         self.state_map = initial.pos + initial.neg
-        Problem.__init__(self, encode_state(initial, self.state_map), goal=goal)
+        Problem.__init__(
+            self,
+            encode_state(initial, self.state_map),
+            goal=goal
+        )
         self.actions_list = self.get_actions()
 
     def get_actions(self):

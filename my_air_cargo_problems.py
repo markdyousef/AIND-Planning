@@ -69,7 +69,7 @@ class AirCargoProblem(Problem):
         # problem must be concrete because the problems in
         # forward search and Planning Graphs must use Propositional Logic
 
-        def load_actions():
+        def load_actions() -> list:
             """Create all concrete Load actions and return a list
 
             :return: list of Action objects
@@ -94,7 +94,7 @@ class AirCargoProblem(Problem):
                         loads.append(load)
             return loads
 
-        def unload_actions():
+        def unload_actions() -> list:
             """Create all concrete Unload actions and return a list
 
             :return: list of Action objects
@@ -120,7 +120,7 @@ class AirCargoProblem(Problem):
                         unloads.append(unload)
             return unloads
 
-        def fly_actions():
+        def fly_actions() -> list:
             """Create all concrete Fly actions and return a list
 
             :return: list of Action objects
@@ -154,6 +154,19 @@ class AirCargoProblem(Problem):
         """
         # TODO implement
         possible_actions = []
+        kb = PropKB()
+        kb.tell(decode_state(state, self.state_map).pos_sentence())
+        for action in self.actions_list:
+            is_possible = True
+            for clause in action.precond_pos:
+                if clause not in kb.clauses:
+                    is_possible = False
+            for clause in action.precond_neg:
+                if clause in kb.clauses:
+                    is_possible = False
+            if is_possible:
+                possible_actions.append(action)
+
         return possible_actions
 
     def result(self, state: str, action: Action):
@@ -167,6 +180,24 @@ class AirCargoProblem(Problem):
         """
         # TODO implement
         new_state = FluentState([], [])
+        old_state = decode_state(state, self.state_map)
+
+        for fluent in old_state.pos:
+            if fluent not in action.effect_rem:
+                new_state.pos.append(fluent)
+
+        for fluent in action.effect_add:
+            if fluent not in new_state.pos:
+                new_state.pos.append(fluent)
+
+        for fluent in old_state.neg:
+            if fluent not in action.effect_add:
+                new_state.neg.append(fluent)
+
+        for fluent in action.effect_rem:
+            if fluent not in new_state.neg:
+                new_state.neg.append(fluent)
+
         return encode_state(new_state, self.state_map)
 
     def goal_test(self, state: str) -> bool:
