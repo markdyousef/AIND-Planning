@@ -59,7 +59,7 @@ class AirCargoProblem(Problem):
             list of Action objects
         """
 
-        # TODO create concrete Action objects based on
+        # Create concrete Action objects based on
         # the domain action schema for: Load, Unload, and Fly
         # concrete actions definition: specific literal action
         # that does not include variables as with the schema
@@ -75,7 +75,6 @@ class AirCargoProblem(Problem):
             :return: list of Action objects
             """
             loads = []
-            # TODO create all load ground actions from the domain Load action
             for c in self.cargos:
                 for p in self.planes:
                     for a in self.airports:
@@ -100,8 +99,6 @@ class AirCargoProblem(Problem):
             :return: list of Action objects
             """
             unloads = []
-            # TODO create all Unload ground actions
-            # from the domain Unload action
             for c in self.cargos:
                 for p in self.planes:
                     for a in self.airports:
@@ -152,7 +149,6 @@ class AirCargoProblem(Problem):
             e.g. 'FTTTFF'
         :return: list of Action objects
         """
-        # TODO implement
         possible_actions = []
         kb = PropKB()
         kb.tell(decode_state(state, self.state_map).pos_sentence())
@@ -178,7 +174,6 @@ class AirCargoProblem(Problem):
         :param action: Action applied
         :return: resulting state after action
         """
-        # TODO implement
         new_state = FluentState([], [])
         old_state = decode_state(state, self.state_map)
 
@@ -237,9 +232,9 @@ class AirCargoProblem(Problem):
         conditions by ignoring the preconditions required for an action to be
         executed.
         """
-        # TODO implement (see Russell-Norvig Ed-3 10.2.3
-        # or Russell-Norvig Ed-2 11.2)
-        count = 0
+        # the minimum number of actions to satisfy the goal state
+        # is one for each goal state
+        count = len(self.goal)
         return count
 
 
