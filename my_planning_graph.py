@@ -584,7 +584,18 @@ class PlanningGraph():
         :param node_s2: PgNode_s
         :return: bool
         """
-        # TODO test for Inconsistent Support between nodes
+        if node_s1.is_pos != node_s2.is_pos:
+            return True
+
+        for parent in node_s1.parents:
+            for other_parent in node_s2.parents:
+                if node_s1 in other_parent.effnodes:
+                    return False
+                if node_s2 in parent.effnodes:
+                    return False
+                if parent.is_mutex(other_parent):
+                    return True
+
         return False
 
     def h_levelsum(self) -> int:
