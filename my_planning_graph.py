@@ -584,8 +584,8 @@ class PlanningGraph():
         :param node_s2: PgNode_s
         :return: bool
         """
-        if node_s1.is_pos != node_s2.is_pos:
-            return True
+        # if node_s1.is_pos != node_s2.is_pos:
+        #     return True
 
         for parent in node_s1.parents:
             for other_parent in node_s2.parents:
@@ -605,7 +605,15 @@ class PlanningGraph():
         :return: int
         """
         level_sum = 0
-        # TODO implement
-        # for each goal in the problem, determine the level cost,
-        # then add them together
+        goals = self.problem.goal
+        for goal in goals:
+            for i, level in enumerate(self.s_levels):
+                for state in self.s_levels[i]:
+                    if goal == state.symbol:
+                        if state.is_pos:
+                            level_sum = level_sum + i
+                            goal_found = True
+                if goal_found:
+                    break
+            goal_found = False
         return level_sum
